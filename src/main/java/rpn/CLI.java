@@ -10,6 +10,12 @@ public class CLI {
         System.out.println("About to evaluate '" + expression + "'");
         long result = evaluate(expression);
         System.out.println("> " + result);
+
+        Bus bus = new InMemoryBus();
+        bus.subscribe("expression-type", new TokenizerConsumer(bus));
+        bus.subscribe("final-result");
+
+        bus.publish(new ExpressionMessage(args[0]));
     }
 
     static long evaluate(String expression) {
