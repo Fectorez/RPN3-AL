@@ -1,9 +1,9 @@
-package rpn;
+package rpn.bus;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import rpn.consumer.Consumer;
+import rpn.message.Message;
+
+import java.util.*;
 
 public class InMemoryBus implements Bus {
 
@@ -13,7 +13,7 @@ public class InMemoryBus implements Bus {
     public void publish(Message message) {
         List<Consumer> consumers = this.consumers.get(message.eventType());
         if ( consumers == null ) {
-            System.out.println("WARNING: \"" + message.eventType() + "\" message not consumed.");
+            System.out.println("WARNING: Message with event type \"" + message.eventType() + "\" not consumed.");
             return;
         }
         consumers.forEach(c -> c.consume(message));

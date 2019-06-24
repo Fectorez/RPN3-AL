@@ -1,8 +1,10 @@
-package rpn;
+package rpn.message;
 
 import java.util.UUID;
 
 public class ExpressionMessage implements Message {
+
+    public static final String EOE = "EOE";
 
     private final String expression;
     private final String expressionId;

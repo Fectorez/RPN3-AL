@@ -1,4 +1,6 @@
-package rpn;
+package rpn.consumer;
+
+import rpn.message.Message;
 
 public interface Consumer {
 
