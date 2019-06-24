@@ -19,9 +19,11 @@ public class CLI {
 
         Bus bus = new InMemoryBus();
         FinalResultConsumer finalResultConsumer = new FinalResultConsumer();
+        OrchestrorConsumer orchestrorConsumer = new OrchestrorConsumer(bus);
 
         bus.subscribe("expression", new TokenizerConsumer(bus));
-        bus.subscribe("token", new OrchestrorConsumer(bus));
+        bus.subscribe("token", orchestrorConsumer);
+        bus.subscribe("result", orchestrorConsumer);
         bus.subscribe("+", new PlusOperator(bus));
         bus.subscribe("-", new MinusOperator(bus));
         bus.subscribe("final-result", finalResultConsumer);

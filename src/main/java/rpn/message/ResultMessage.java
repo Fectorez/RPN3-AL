@@ -10,6 +10,10 @@ public class ResultMessage implements Message {
         this.stack = stack;
     }
 
+    public Stack getStack() {
+        return stack;
+    }
+
     @Override
     public String eventType() {
         return "result";

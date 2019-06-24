@@ -1,10 +1,7 @@
 package rpn.consumer;
 
 import rpn.bus.Bus;
-import rpn.message.FinalMessage;
-import rpn.message.Message;
-import rpn.message.OperationMessage;
-import rpn.message.TokenMessage;
+import rpn.message.*;
 import rpn.stack.Stack;
 import rpn.stack.StackDelegation;
 
@@ -21,19 +18,29 @@ public class OrchestrorConsumer implements Consumer {
 
     @Override
     public void consume(Message message) {
-        TokenMessage tokenMessage = (TokenMessage)message;
-        String expressionId = tokenMessage.getExpressionId();
-        String token = tokenMessage.getToken();
+        if ( message instanceof TokenMessage ) {
+            TokenMessage tokenMessage = (TokenMessage)message;
+            String expressionId = tokenMessage.getExpressionId();
+            String token = tokenMessage.getToken();
 
-        if ( EOE.equals(token) ) {
-            bus.publish(new FinalMessage(stack.pop()));
+            if ( EOE.equals(token) ) {
+                bus.publish(new FinalMessage(stack.pop()));
+            }
+            else if ( isNumeric(token) ) {
+                stack.push(Double.parseDouble(token));
+            }
+            else {
+                bus.publish(new OperationMessage(stack, token));
+            }
         }
-        else if ( isNumeric(token) ) {
-            stack.push(Double.parseDouble(token));
+        else if ( message instanceof ResultMessage ) {
+            ResultMessage resultMessage = (ResultMessage)message;
+            stack = resultMessage.getStack();
         }
         else {
-            bus.publish(new OperationMessage(stack, token));
+            System.out.println("NE DOIS JAMAIS ARRIVER ICI (problème définition consumers dans CLI ?)");
         }
+
     }
 
     private static boolean isNumeric(String strNum) {
